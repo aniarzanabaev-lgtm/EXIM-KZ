@@ -13,6 +13,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import Sidebar from "@/components/Sidebar";
 import styles from "@/components/Dashboard.module.css";
 
 type StatusKey = "pending" | "approved" | "rejected" | "processing";
@@ -132,12 +133,8 @@ export default function AdminPage() {
   const bar = (n: number) => `${Math.round((n / total) * 100)}%`;
 
   return (
-    <div className={styles.layout}>
-      <aside className="card" style={{ width: 260, height: "100vh", position: "sticky", top: 0 }}>
-        <div style={{ fontFamily: "var(--font-head)", fontSize: 24, letterSpacing: 1, marginBottom: 16 }}>EXIM <span style={{ color: "var(--accent)" }}>KZ</span></div>
-        <div style={{ color: "var(--text2)", fontSize: 13, marginBottom: 12 }}>Роль: <b>Администратор</b></div>
-        <div style={{ fontSize: 12, color: "var(--text3)" }}>{profile.email}</div>
-      </aside>
+    <div className={`${styles.layout} ${styles.layoutColumn}`}>
+      <Sidebar activeTab="" tabs={[]} onTabChange={() => {}} />
 
       <main className={styles.main}>
         <div className={styles.pageHeader}>
