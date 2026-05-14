@@ -1,0 +1,157 @@
+"use client";
+// src/components/AuthModal.tsx
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import styles from "./AuthModal.module.css";
+
+type Mode = "login" | "register";
+
+interface Props {
+  initialMode: Mode;
+  onClose: () => void;
+}
+
+const FIREBASE_ERRORS: Record<string, string> = {
+  "auth/email-already-in-use": "Этот email уже зарегистрирован",
+  "auth/invalid-email": "Неверный формат email",
+  "auth/weak-password": "Пароль — минимум 6 символов",
+  "auth/user-not-found": "Пользователь не найден",
+  "auth/wrong-password": "Неверный пароль",
+  "auth/invalid-credential": "Неверный email или пароль",
+  "auth/too-many-requests": "Слишком много попыток. Попробуйте позже",
+  "auth/network-request-failed": "Ошибка сети",
+};
+
+export default function AuthModal({ initialMode, onClose }: Props) {
+  const [mode, setMode] = useState<Mode>(initialMode);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  // Login fields
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  // Register fields
+  const [regName, setRegName] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regRole, setRegRole] = useState<"client" | "logist">("client");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!loginEmail || !loginPassword) { setError("Заполните все поля"); return; }
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      onClose();
+      // redirect handled by page
+    } catch (err: unknown) {
+      const code = (err as { code?: string }).code || "";
+      setError(FIREBASE_ERRORS[code] || "Ошибка входа");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!regName || !regEmail || !regPassword) { setError("Заполните все поля"); return; }
+    if (regPassword.length < 6) { setError("Пароль — минимум 6 символов"); return; }
+    setLoading(true);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, regEmail, regPassword);
+      await addDoc(collection(db, "users"), {
+        uid: cred.user.uid,
+        name: regName,
+        email: regEmail,
+        role: regRole,
+        createdAt: serverTimestamp(),
+      });
+      onClose();
+    } catch (err: unknown) {
+      const code = (err as { code?: string }).code || "";
+      setError(FIREBASE_ERRORS[code] || "Ошибка регистрации");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.overlay}>
+      <div className={styles.backdrop} onClick={onClose} />
+      <div className={styles.box}>
+        <button className={styles.close} onClick={onClose}>✕</button>
+
+        <div className={styles.logoText}>AIR<span>CARGO</span>KZ</div>
+
+        {/* TABS */}
+        <div className={styles.tabs}>
+          <button className={`${styles.tab} ${mode === "login" ? styles.activeTab : ""}`} onClick={() => { setMode("login"); setError(""); }}>
+            Войти
+          </button>
+          <button className={`${styles.tab} ${mode === "register" ? styles.activeTab : ""}`} onClick={() => { setMode("register"); setError(""); }}>
+            Регистрация
+          </button>
+        </div>
+
+        {/* LOGIN */}
+        {mode === "login" && (
+          <form onSubmit={handleLogin} className={styles.form}>
+            <p className={styles.subtitle}>Добро пожаловать обратно</p>
+            <div className="field">
+              <label>Email</label>
+              <input type="email" placeholder="your@email.com" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} />
+            </div>
+            <div className="field">
+              <label>Пароль</label>
+              <input type="password" placeholder="••••••••" value={loginPassword} onChange={e => setLoginPassword(e.target.value)} />
+            </div>
+            {error && <div className={styles.error}>{error}</div>}
+            <button type="submit" className={styles.submit} disabled={loading}>
+              {loading ? "Входим..." : "Войти →"}
+            </button>
+          </form>
+        )}
+
+        {/* REGISTER */}
+        {mode === "register" && (
+          <form onSubmit={handleRegister} className={styles.form}>
+            <p className={styles.subtitle}>Создайте аккаунт</p>
+            <div className="field">
+              <label>Полное имя</label>
+              <input type="text" placeholder="Иван Иванов" value={regName} onChange={e => setRegName(e.target.value)} />
+            </div>
+            <div className="field">
+              <label>Email</label>
+              <input type="email" placeholder="your@email.com" value={regEmail} onChange={e => setRegEmail(e.target.value)} />
+            </div>
+            <div className="field">
+              <label>Пароль</label>
+              <input type="password" placeholder="••••••••" value={regPassword} onChange={e => setRegPassword(e.target.value)} />
+            </div>
+            <div className="field">
+              <label>Роль</label>
+              <select value={regRole} onChange={e => setRegRole(e.target.value as "client" | "logist")}>
+                <option value="client">Клиент — создаю заявки на перевозку</option>
+                <option value="logist">Логист — обрабатываю заявки</option>
+              </select>
+            </div>
+            {error && <div className={styles.error}>{error}</div>}
+            <button type="submit" className={styles.submit} disabled={loading}>
+              {loading ? "Создаём аккаунт..." : "Создать аккаунт ✈"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}

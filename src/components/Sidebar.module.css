@@ -1,0 +1,94 @@
+/* Sidebar.module.css */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-family: var(--font-head);
+  font-size: 22px;
+  letter-spacing: 3px;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.logo span { color: var(--accent); }
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text2);
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-body);
+}
+.navItem:hover { background: var(--surface2); color: var(--text); }
+.navItem.active {
+  background: rgba(232,160,32,0.1);
+  color: var(--accent);
+  border-left: 3px solid var(--accent);
+}
+
+.icon { font-size: 16px; }
+
+.userCard {
+  padding: 16px;
+  background: var(--bg2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+.userName { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+.userRole {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.client { color: var(--accent); }
+.logist { color: var(--blue2); }
+.userEmail { font-size: 12px; color: var(--text3); }
+
+.logoutBtn {
+  background: transparent;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+}
+.logoutBtn:hover { border-color: var(--red); color: var(--red); }
+
+@media (max-width: 768px) { .sidebar { display: none; } }

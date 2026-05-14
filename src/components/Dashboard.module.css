@@ -1,0 +1,41 @@
+/* Dashboard.module.css */
+.layout { display: flex; min-height: 100vh; }
+
+.main { flex: 1; padding: 36px 40px; overflow-y: auto; }
+
+.pageHeader { margin-bottom: 28px; }
+.pageHeader h1 { font-size: 32px; font-weight: 700; margin-bottom: 4px; }
+.pageHeader p { color: var(--text2); font-size: 14px; }
+
+.formCard {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px;
+}
+.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.submitBtn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #000; border: none; padding: 16px 40px;
+  border-radius: var(--radius); font-family: var(--font-head);
+  font-size: 22px; letter-spacing: 1px; cursor: pointer;
+  transition: all 0.2s; margin-top: 24px;
+  box-shadow: 0 0 30px rgba(232,160,32,0.2);
+}
+.submitBtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 50px rgba(232,160,32,0.4); }
+.submitBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.list { display: flex; flex-direction: column; gap: 16px; }
+
+/* Logist tabs */
+.tabBtns { display: flex; gap: 4px; background: var(--surface); border-radius: var(--radius); padding: 4px; margin-bottom: 24px; width: fit-content; border: 1px solid var(--border); }
+.tabBtn {
+  padding: 10px 20px; border-radius: 8px; background: transparent; border: none;
+  color: var(--text2); font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+}
+.tabBtnActive { background: var(--surface2); color: var(--text); }
+
+@media (max-width: 768px) {
+  .main { padding: 20px; }
+  .formGrid { grid-template-columns: 1fr; }
+}
