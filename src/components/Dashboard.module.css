@@ -81,3 +81,9 @@
   .formGrid { grid-template-columns: 1fr; }
   .grid2 { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 640px) {
+  .searchBox { max-width: 100%; }
+  .tabBtns { width: 100%; flex-wrap: wrap; }
+  .tabBtn { flex: 1; }
+}

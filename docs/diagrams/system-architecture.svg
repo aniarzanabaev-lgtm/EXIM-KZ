@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700">
+  <defs>
+    <linearGradient id="frontendGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="apiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="firebaseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="openaiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#525252"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="500" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#1a1a1a">Архитектура системы EXIM KZ</text>
+  
+  <!-- Users Section -->
+  <g transform="translate(30, 70)">
+    <rect x="0" y="0" width="180" height="200" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+    <text x="90" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#475569">ПОЛЬЗОВАТЕЛИ</text>
+    
+    <g transform="translate(20, 45)">
+      <rect x="0" y="0" width="140" height="40" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+      <text x="70" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1d4ed8">👤 Клиент</text>
+    </g>
+    <g transform="translate(20, 95)">
+      <rect x="0" y="0" width="140" height="40" rx="8" fill="#ecfeff" stroke="#a5f3fc" stroke-width="1"/>
+      <text x="70" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#0891b2">👷 Логист</text>
+    </g>
+    <g transform="translate(20, 145)">
+      <rect x="0" y="0" width="140" height="40" rx="8" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1"/>
+      <text x="70" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#7c3aed">👑 Админ</text>
+    </g>
+  </g>
+  
+  <!-- Arrow Users to Frontend -->
+  <line x1="210" y1="170" x2="270" y2="170" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="240" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#525252">HTTP</text>
+  
+  <!-- Frontend Section -->
+  <g transform="translate(280, 70)">
+    <rect x="0" y="0" width="280" height="320" rx="12" fill="url(#frontendGrad)" filter="url(#shadow)"/>
+    <text x="140" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">FRONTEND (Next.js 14)</text>
+    
+    <!-- Pages -->
+    <g transform="translate(15, 50)">
+      <rect x="0" y="0" width="250" height="120" rx="8" fill="rgba(255,255,255,0.15)"/>
+      <text x="125" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.9)">СТРАНИЦЫ</text>
+      
+      <text x="15" y="45" font-family="Arial, sans-serif" font-size="10" fill="white">📄 / — LandingPage</text>
+      <text x="15" y="62" font-family="Arial, sans-serif" font-size="10" fill="white">📄 /client — ClientDashboard</text>
+      <text x="15" y="79" font-family="Arial, sans-serif" font-size="10" fill="white">📄 /logist — LogistDashboard</text>
+      <text x="15" y="96" font-family="Arial, sans-serif" font-size="10" fill="white">📄 /admin — AdminPage</text>
+    </g>
+    
+    <!-- Components -->
+    <g transform="translate(15, 180)">
+      <rect x="0" y="0" width="250" height="120" rx="8" fill="rgba(255,255,255,0.15)"/>
+      <text x="125" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.9)">КОМПОНЕНТЫ</text>
+      
+      <text x="15" y="45" font-family="Arial, sans-serif" font-size="10" fill="white">🔐 AuthModal — авторизация</text>
+      <text x="15" y="62" font-family="Arial, sans-serif" font-size="10" fill="white">📋 RequestCard — карточка заявки</text>
+      <text x="15" y="79" font-family="Arial, sans-serif" font-size="10" fill="white">🔍 RequestDetailModal — детали</text>
+      <text x="15" y="96" font-family="Arial, sans-serif" font-size="10" fill="white">📊 Sidebar — навигация</text>
+    </g>
+  </g>
+  
+  <!-- Arrow Frontend to API -->
+  <line x1="420" y1="400" x2="420" y2="460" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="440" y="435" font-family="Arial, sans-serif" font-size="10" fill="#525252">fetch()</text>
+  
+  <!-- API Routes Section -->
+  <g transform="translate(280, 470)">
+    <rect x="0" y="0" width="280" height="100" rx="12" fill="url(#apiGrad)" filter="url(#shadow)"/>
+    <text x="140" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">API ROUTES</text>
+    
+    <g transform="translate(15, 40)">
+      <rect x="0" y="0" width="120" height="45" rx="6" fill="rgba(255,255,255,0.2)"/>
+      <text x="60" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">/api/analyze</text>
+      <text x="60" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">ИИ-анализ рейсов</text>
+    </g>
+    <g transform="translate(145, 40)">
+      <rect x="0" y="0" width="120" height="45" rx="6" fill="rgba(255,255,255,0.2)"/>
+      <text x="60" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">/api/seed</text>
+      <text x="60" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">Генерация данных</text>
+    </g>
+  </g>
+  
+  <!-- Firebase Section -->
+  <g transform="translate(620, 70)">
+    <rect x="0" y="0" width="340" height="320" rx="12" fill="url(#firebaseGrad)" filter="url(#shadow)"/>
+    <text x="170" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">🔥 FIREBASE</text>
+    
+    <!-- Auth -->
+    <g transform="translate(15, 50)">
+      <rect x="0" y="0" width="150" height="80" rx="8" fill="rgba(255,255,255,0.2)"/>
+      <text x="75" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">Authentication</text>
+      <text x="75" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Email/Password</text>
+      <text x="75" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Password Reset</text>
+      <text x="75" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Session Management</text>
+    </g>
+    
+    <!-- Firestore -->
+    <g transform="translate(175, 50)">
+      <rect x="0" y="0" width="150" height="80" rx="8" fill="rgba(255,255,255,0.2)"/>
+      <text x="75" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">Firestore DB</text>
+      <text x="75" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">NoSQL Database</text>
+      <text x="75" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Real-time Sync</text>
+      <text x="75" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">onSnapshot()</text>
+    </g>
+    
+    <!-- Collections -->
+    <g transform="translate(15, 145)">
+      <rect x="0" y="0" width="310" height="160" rx="8" fill="rgba(255,255,255,0.15)"/>
+      <text x="155" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.9)">КОЛЛЕКЦИИ</text>
+      
+      <g transform="translate(10, 35)">
+        <rect x="0" y="0" width="90" height="110" rx="6" fill="rgba(255,255,255,0.2)"/>
+        <text x="45" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">users</text>
+        <text x="45" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">uid</text>
+        <text x="45" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">name</text>
+        <text x="45" y="66" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">email</text>
+        <text x="45" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">role</text>
+        <text x="45" y="94" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">createdAt</text>
+      </g>
+      
+      <g transform="translate(110, 35)">
+        <rect x="0" y="0" width="90" height="110" rx="6" fill="rgba(255,255,255,0.2)"/>
+        <text x="45" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">requests</text>
+        <text x="45" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">requestId</text>
+        <text x="45" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">clientUid</text>
+        <text x="45" y="66" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">cargoType</text>
+        <text x="45" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">status</text>
+        <text x="45" y="94" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">...</text>
+      </g>
+      
+      <g transform="translate(210, 35)">
+        <rect x="0" y="0" width="90" height="110" rx="6" fill="rgba(255,255,255,0.2)"/>
+        <text x="45" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">planes</text>
+        <text x="45" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">model</text>
+        <text x="45" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">airline</text>
+        <text x="45" y="66" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">pricePerKg</text>
+        <text x="45" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">status</text>
+        <text x="45" y="94" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">...</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Arrow Frontend to Firebase -->
+  <line x1="560" y1="230" x2="610" y2="230" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="585" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#525252">SDK</text>
+  
+  <!-- OpenAI Section -->
+  <g transform="translate(620, 470)">
+    <rect x="0" y="0" width="340" height="100" rx="12" fill="url(#openaiGrad)" filter="url(#shadow)"/>
+    <text x="170" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">🤖 OPENAI</text>
+    
+    <g transform="translate(15, 40)">
+      <rect x="0" y="0" width="150" height="45" rx="6" fill="rgba(255,255,255,0.2)"/>
+      <text x="75" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">GPT-4o-mini</text>
+      <text x="75" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">Анализ рейсов</text>
+    </g>
+    <g transform="translate(175, 40)">
+      <rect x="0" y="0" width="150" height="45" rx="6" fill="rgba(255,255,255,0.2)"/>
+      <text x="75" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">JSON Response</text>
+      <text x="75" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">Рекомендации</text>
+    </g>
+  </g>
+  
+  <!-- Arrow API to OpenAI -->
+  <line x1="560" y1="520" x2="610" y2="520" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="585" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#525252">API</text>
+  
+  <!-- Arrow API to Firebase -->
+  <path d="M 560 500 Q 590 500 590 420 Q 590 400 620 400" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="605" y="450" font-family="Arial, sans-serif" font-size="9" fill="#525252">Admin SDK</text>
+  
+  <!-- Legend -->
+  <g transform="translate(30, 610)">
+    <rect x="0" y="0" width="940" height="70" rx="8" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
+    <text x="20" y="25" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#1a1a1a">Технологии:</text>
+    
+    <rect x="110" y="12" width="16" height="16" rx="3" fill="url(#frontendGrad)"/>
+    <text x="135" y="25" font-family="Arial, sans-serif" font-size="11" fill="#525252">Next.js 14 + React 18</text>
+    
+    <rect x="290" y="12" width="16" height="16" rx="3" fill="url(#apiGrad)"/>
+    <text x="315" y="25" font-family="Arial, sans-serif" font-size="11" fill="#525252">API Routes (Server)</text>
+    
+    <rect x="460" y="12" width="16" height="16" rx="3" fill="url(#firebaseGrad)"/>
+    <text x="485" y="25" font-family="Arial, sans-serif" font-size="11" fill="#525252">Firebase (Auth + Firestore)</text>
+    
+    <rect x="680" y="12" width="16" height="16" rx="3" fill="url(#openaiGrad)"/>
+    <text x="705" y="25" font-family="Arial, sans-serif" font-size="11" fill="#525252">OpenAI GPT-4o-mini</text>
+    
+    <text x="20" y="55" font-family="Arial, sans-serif" font-size="10" fill="#a3a3a3">Деплой: Vercel · Язык: TypeScript · Стили: CSS Modules · Шрифты: Bebas Neue + Outfit</text>
+  </g>
+</svg>

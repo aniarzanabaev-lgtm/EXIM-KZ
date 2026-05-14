@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <defs>
+    <linearGradient id="clientGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="logistGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0891b2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0e7490;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="adminGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Title -->
+  <text x="450" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1a1a1a">Диаграмма ролей и доступа — EXIM KZ</text>
+  
+  <!-- Guest -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="0" width="160" height="80" rx="12" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="2" filter="url(#shadow)"/>
+    <text x="80" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="28">👤</text>
+    <text x="80" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#525252">Гость</text>
+  </g>
+  
+  <!-- Arrow Guest to Client -->
+  <g>
+    <line x1="210" y1="140" x2="280" y2="140" stroke="#16a34a" stroke-width="3" marker-end="url(#arrowGreen)"/>
+    <text x="245" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#16a34a">Регистрация</text>
+  </g>
+  <defs>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+  
+  <!-- Client Role -->
+  <g transform="translate(290, 80)">
+    <rect x="0" y="0" width="180" height="120" rx="12" fill="url(#clientGrad)" filter="url(#shadow)"/>
+    <text x="90" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="32">👤</text>
+    <text x="90" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">КЛИЕНТ</text>
+    <text x="90" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="rgba(255,255,255,0.8)">role: "client"</text>
+    <text x="90" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">По умолчанию</text>
+  </g>
+  
+  <!-- Arrow Client to Logist -->
+  <g>
+    <line x1="470" y1="140" x2="540" y2="140" stroke="#7c3aed" stroke-width="3" marker-end="url(#arrowPurple)"/>
+    <text x="505" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7c3aed">Назначение</text>
+    <text x="505" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7c3aed">админом</text>
+  </g>
+  <defs>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  
+  <!-- Logist Role -->
+  <g transform="translate(550, 80)">
+    <rect x="0" y="0" width="180" height="120" rx="12" fill="url(#logistGrad)" filter="url(#shadow)"/>
+    <text x="90" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="32">👷</text>
+    <text x="90" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">ЛОГИСТ</text>
+    <text x="90" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="rgba(255,255,255,0.8)">role: "logist"</text>
+    <text x="90" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">Назначается</text>
+  </g>
+  
+  <!-- Admin Role -->
+  <g transform="translate(750, 80)">
+    <rect x="0" y="0" width="130" height="120" rx="12" fill="url(#adminGrad)" filter="url(#shadow)"/>
+    <text x="65" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="32">👑</text>
+    <text x="65" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">АДМИН</text>
+    <text x="65" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="rgba(255,255,255,0.8)">role: "admin"</text>
+    <text x="65" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">Вручную в БД</text>
+  </g>
+  
+  <!-- Client Permissions -->
+  <g transform="translate(240, 240)">
+    <rect x="0" y="0" width="280" height="180" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="280" height="35" rx="10" fill="#eff6ff"/>
+    <text x="140" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#1d4ed8">Возможности клиента</text>
+    
+    <g transform="translate(15, 50)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Создание заявок на перевозку</text>
+    </g>
+    <g transform="translate(15, 75)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Просмотр своих заявок</text>
+    </g>
+    <g transform="translate(15, 100)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Отслеживание статуса</text>
+    </g>
+    <g transform="translate(15, 125)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Восстановление пароля</text>
+    </g>
+    <g transform="translate(15, 155)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#dc2626">✗</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#a3a3a3">Доступ к админ-панели</text>
+    </g>
+  </g>
+  
+  <!-- Logist Permissions -->
+  <g transform="translate(540, 240)">
+    <rect x="0" y="0" width="280" height="200" rx="10" fill="white" stroke="#0891b2" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="280" height="35" rx="10" fill="#ecfeff"/>
+    <text x="140" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#0e7490">Возможности логиста</text>
+    
+    <g transform="translate(15, 50)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Просмотр всех заявок</text>
+    </g>
+    <g transform="translate(15, 75)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Запуск ИИ-анализа рейсов</text>
+    </g>
+    <g transform="translate(15, 100)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Одобрение заявок</text>
+    </g>
+    <g transform="translate(15, 125)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Отклонение заявок</text>
+    </g>
+    <g transform="translate(15, 150)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Поиск по ID заявки</text>
+    </g>
+    <g transform="translate(15, 175)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#dc2626">✗</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#a3a3a3">Управление пользователями</text>
+    </g>
+  </g>
+  
+  <!-- Admin Permissions -->
+  <g transform="translate(390, 460)">
+    <rect x="0" y="0" width="280" height="130" rx="10" fill="white" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="280" height="35" rx="10" fill="#f5f3ff"/>
+    <text x="140" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#6d28d9">Возможности админа</text>
+    
+    <g transform="translate(15, 50)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Просмотр метрик системы</text>
+    </g>
+    <g transform="translate(15, 75)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Назначение роли логиста</text>
+    </g>
+    <g transform="translate(15, 100)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#16a34a">✓</text>
+      <text x="20" y="0" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Поиск пользователей</text>
+    </g>
+  </g>
+  
+  <!-- Connecting lines -->
+  <line x1="380" y1="200" x2="380" y2="240" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="640" y1="200" x2="680" y2="240" stroke="#0891b2" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="815" y1="200" x2="530" y2="460" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,5"/>
+</svg>

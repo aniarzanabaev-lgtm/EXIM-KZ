@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900">
+  <defs>
+    <linearGradient id="startGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#404040;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="processGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="decisionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="errorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="successGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#525252"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#10b981"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a">Алгоритм ИИ-подбора рейсов — EXIM KZ</text>
+  
+  <!-- START -->
+  <g transform="translate(320, 60)">
+    <ellipse cx="80" cy="25" rx="70" ry="25" fill="url(#startGrad)" filter="url(#shadow)"/>
+    <text x="80" y="31" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">ЗАПРОС</text>
+  </g>
+  <line x1="400" y1="85" x2="400" y2="115" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Step 1: Load planes -->
+  <g transform="translate(270, 120)">
+    <rect x="0" y="0" width="260" height="50" rx="8" fill="url(#processGrad)" filter="url(#shadow)"/>
+    <text x="130" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">1. Загрузка рейсов из Firestore</text>
+    <text x="130" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">status = "available"</text>
+  </g>
+  <line x1="400" y1="170" x2="400" y2="195" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Step 2: Filter by weight -->
+  <g transform="translate(270, 200)">
+    <rect x="0" y="0" width="260" height="50" rx="8" fill="url(#processGrad)" filter="url(#shadow)"/>
+    <text x="130" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">2. Фильтр по вместимости</text>
+    <text x="130" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">availableCapacityKg >= weightKg</text>
+  </g>
+  <line x1="400" y1="250" x2="400" y2="275" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Decision 1: Has planes? -->
+  <g transform="translate(320, 280)">
+    <polygon points="80,0 160,40 80,80 0,40" fill="url(#decisionGrad)" filter="url(#shadow)"/>
+    <text x="80" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">Есть</text>
+    <text x="80" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">рейсы?</text>
+  </g>
+  
+  <!-- No planes by weight -->
+  <line x1="480" y1="320" x2="580" y2="320" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <text x="530" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#dc2626">Нет</text>
+  <g transform="translate(590, 295)">
+    <rect x="0" y="0" width="180" height="50" rx="8" fill="url(#errorGrad)" filter="url(#shadow)"/>
+    <text x="90" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">❌ Ошибка</text>
+    <text x="90" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Нет рейсов по весу</text>
+  </g>
+  
+  <!-- Yes - continue -->
+  <line x1="400" y1="360" x2="400" y2="385" stroke="#10b981" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="415" y="375" font-family="Arial, sans-serif" font-size="10" fill="#10b981">Да</text>
+  
+  <!-- Step 3: Filter by date -->
+  <g transform="translate(270, 390)">
+    <rect x="0" y="0" width="260" height="50" rx="8" fill="url(#processGrad)" filter="url(#shadow)"/>
+    <text x="130" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">3. Фильтр по дате</text>
+    <text x="130" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">departureTime >= desiredDate</text>
+  </g>
+  <line x1="400" y1="440" x2="400" y2="465" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Decision 2: Has planes by date? -->
+  <g transform="translate(320, 470)">
+    <polygon points="80,0 160,40 80,80 0,40" fill="url(#decisionGrad)" filter="url(#shadow)"/>
+    <text x="80" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">Есть</text>
+    <text x="80" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">рейсы?</text>
+  </g>
+  
+  <!-- No planes by date -->
+  <line x1="480" y1="510" x2="580" y2="510" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <text x="530" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#dc2626">Нет</text>
+  <g transform="translate(590, 485)">
+    <rect x="0" y="0" width="180" height="50" rx="8" fill="url(#errorGrad)" filter="url(#shadow)"/>
+    <text x="90" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="white">❌ Ошибка</text>
+    <text x="90" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Нет рейсов по дате</text>
+  </g>
+  
+  <!-- Yes - continue -->
+  <line x1="400" y1="550" x2="400" y2="575" stroke="#10b981" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="415" y="565" font-family="Arial, sans-serif" font-size="10" fill="#10b981">Да</text>
+  
+  <!-- Step 4: Recalculate cost -->
+  <g transform="translate(270, 580)">
+    <rect x="0" y="0" width="260" height="50" rx="8" fill="url(#processGrad)" filter="url(#shadow)"/>
+    <text x="130" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">4. Пересчёт стоимости</text>
+    <text x="130" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">totalCostUSD = weightKg × pricePerKg</text>
+  </g>
+  <line x1="400" y1="630" x2="400" y2="655" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Step 5: Sort by priority -->
+  <g transform="translate(200, 660)">
+    <rect x="0" y="0" width="400" height="80" rx="8" fill="url(#processGrad)" filter="url(#shadow)"/>
+    <text x="200" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">5. Сортировка по приоритету клиента</text>
+    
+    <g transform="translate(15, 35)">
+      <rect x="0" y="0" width="115" height="35" rx="4" fill="rgba(255,255,255,0.2)"/>
+      <text x="57" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="600" fill="white">🚀 Express</text>
+      <text x="57" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">по времени ↑</text>
+    </g>
+    <g transform="translate(140, 35)">
+      <rect x="0" y="0" width="115" height="35" rx="4" fill="rgba(255,255,255,0.2)"/>
+      <text x="57" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="600" fill="white">💰 Economy</text>
+      <text x="57" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">по цене ↑</text>
+    </g>
+    <g transform="translate(265, 35)">
+      <rect x="0" y="0" width="120" height="35" rx="4" fill="rgba(255,255,255,0.2)"/>
+      <text x="60" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="600" fill="white">⚖️ Normal</text>
+      <text x="60" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">баланс 60/40</text>
+    </g>
+  </g>
+  <line x1="400" y1="740" x2="400" y2="765" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Step 6: AI Analysis -->
+  <g transform="translate(250, 770)">
+    <rect x="0" y="0" width="300" height="55" rx="8" fill="url(#aiGrad)" filter="url(#shadow)"/>
+    <text x="150" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="white">🤖 6. Запрос к GPT-4o-mini</text>
+    <text x="150" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Топ-10 рейсов → Анализ → bestFitPlane</text>
+  </g>
+  <line x1="400" y1="825" x2="400" y2="850" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Result -->
+  <g transform="translate(250, 855)">
+    <rect x="0" y="0" width="300" height="40" rx="20" fill="url(#successGrad)" filter="url(#shadow)"/>
+    <text x="150" y="26" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">✅ РЕЗУЛЬТАТ: bestFitPlane + cheapestPlane</text>
+  </g>
+  
+  <!-- Side note: cheapestPlane -->
+  <g transform="translate(30, 660)">
+    <rect x="0" y="0" width="150" height="80" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+    <text x="75" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="#16a34a">💰 cheapestPlane</text>
+    <text x="75" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#525252">Параллельно:</text>
+    <text x="75" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#525252">сортировка по</text>
+    <text x="75" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#525252">pricePerKg ↑</text>
+  </g>
+  <line x1="180" y1="700" x2="200" y2="700" stroke="#16a34a" stroke-width="1" stroke-dasharray="4,2"/>
+</svg>

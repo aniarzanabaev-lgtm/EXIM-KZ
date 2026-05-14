@@ -1,5 +1,5 @@
 // src/app/layout.tsx
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 
@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "EXIM KZ — Авиаперевозки",
   description: "EXIM KZ — платформа для управления авиаперевозкой грузов",
   icons: { icon: "/favicon.svg" },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
