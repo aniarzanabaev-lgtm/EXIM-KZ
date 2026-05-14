@@ -107,7 +107,7 @@ export default function LogistDashboard() {
   };
 
   return (
-    <div className={styles.layout}>
+    <div className={`${styles.layout} ${styles.layoutColumn}`}>
       <Sidebar activeTab={activeTab} tabs={TABS} onTabChange={handleTabChange} />
 
       <main className={styles.main}>

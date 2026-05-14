@@ -136,7 +136,7 @@ export default function ClientDashboard() {
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
 
   return (
-    <div className={styles.layout}>
+    <div className={`${styles.layout} ${styles.layoutColumn}`}>
       <Sidebar activeTab={activeTab} tabs={TABS} onTabChange={(t) => { setActiveTab(t); }} />
 
       <main className={styles.main}>

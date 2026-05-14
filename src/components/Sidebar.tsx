@@ -40,17 +40,19 @@ export default function Sidebar({ activeTab, tabs, onTabChange }: SidebarProps) 
         ))}
       </nav>
 
-      <div className={styles.userCard}>
-        <div className={styles.userName}>{profile?.name}</div>
-        <div className={`${styles.userRole} ${profile?.role === "client" ? styles.client : profile?.role === "logist" ? styles.logist : styles.admin}`}>
-          {profile?.role === "client" ? "Клиент" : profile?.role === "logist" ? "Логист" : "Админ"}
+      <div className={styles.userBlock}>
+        <div className={styles.userCard}>
+          <div className={styles.userName}>{profile?.name}</div>
+          <div className={`${styles.userRole} ${profile?.role === "client" ? styles.client : profile?.role === "logist" ? styles.logist : styles.admin}`}>
+            {profile?.role === "client" ? "Клиент" : profile?.role === "logist" ? "Логист" : "Админ"}
+          </div>
+          <div className={styles.userEmail}>{profile?.email}</div>
         </div>
-        <div className={styles.userEmail}>{profile?.email}</div>
-      </div>
 
-      <button className={styles.logoutBtn} onClick={handleLogout}>
-        Выйти
-      </button>
+        <button className={styles.logoutBtn} onClick={handleLogout}>
+          Выйти
+        </button>
+      </div>
     </aside>
   );
 }

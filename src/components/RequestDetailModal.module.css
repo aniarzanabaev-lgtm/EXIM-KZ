@@ -42,16 +42,17 @@
 /* Sections */
 .section { margin-bottom: 24px; }
 
-.detailGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.detailGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
 .detailItem {
   background: #fafafa; padding: 10px 14px;
   border-radius: 6px; border: 1px solid #e5e5e5;
+  min-width: 0;
 }
 .detailItem label {
   display: block; font-size: 10px; color: #a3a3a3;
   margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;
 }
-.detailItem span { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+.detailItem span { font-size: 13px; font-weight: 500; color: #1a1a1a; word-break: break-word; }
 
 .notes {
   margin-top: 8px; padding: 10px 14px;
