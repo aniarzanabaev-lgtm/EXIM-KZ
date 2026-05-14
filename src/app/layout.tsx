@@ -4,8 +4,8 @@ import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AirCargo KZ — Авиаперевозки Казахстана",
-  description: "Интеллектуальная платформа для управления авиаперевозками в Казахстане",
+  title: "EXIM KZ — Авиаперевозки",
+  description: "EXIM KZ — платформа для управления авиаперевозкой грузов",
   icons: { icon: "/favicon.svg" },
 };
 

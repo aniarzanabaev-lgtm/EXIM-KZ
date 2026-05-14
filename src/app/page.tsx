@@ -13,6 +13,7 @@ export default function Home() {
     if (!loading && user && profile) {
       if (profile.role === "client") router.push("/client");
       else if (profile.role === "logist") router.push("/logist");
+      else if (profile.role === "admin") router.push("/admin");
     }
   }, [user, profile, loading, router]);
 

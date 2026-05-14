@@ -13,6 +13,7 @@ export default function LogistPage() {
     if (!loading) {
       if (!user) router.push("/");
       else if (profile?.role === "client") router.push("/client");
+      else if (profile?.role === "admin") router.push("/admin");
     }
   }, [user, profile, loading, router]);
 

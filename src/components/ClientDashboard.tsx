@@ -2,8 +2,8 @@
 // src/components/ClientDashboard.tsx
 import { useState, useEffect, useCallback } from "react";
 import {
-  collection, addDoc, getDocs, query,
-  where, orderBy, serverTimestamp,
+  collection, addDoc, query,
+  where, serverTimestamp, onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/lib/auth-context";
@@ -35,7 +35,7 @@ const CARGO_TYPES = [
 export default function ClientDashboard() {
   const { user, profile } = useAuth();
   const { showToast, ToastComponent } = useToast();
-  const [activeTab, setActiveTab] = useState("new");
+  const [activeTab, setActiveTab] = useState("history");
   const [requests, setRequests] = useState<CargoRequest[]>([]);
   const [loadingReqs, setLoadingReqs] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -55,27 +55,44 @@ export default function ClientDashboard() {
     budgetUSD: "",
   });
 
-  const loadRequests = useCallback(async () => {
-    if (!user) return;
+  const subscribeRequests = useCallback(() => {
+    if (!user) return () => {};
     setLoadingReqs(true);
-    try {
-      const q = query(
-        collection(db, "requests"),
-        where("clientUid", "==", user.uid),
-        orderBy("createdAt", "desc")
-      );
-      const snap = await getDocs(q);
-      setRequests(snap.docs.map(d => ({ id: d.id, ...d.data() } as CargoRequest)));
-    } catch (e) {
-      console.error(e);
-    } finally {
+    
+    // Запрос БЕЗ orderBy — не требует композитного индекса
+    // Сортировка выполняется на клиенте
+    const q = query(
+      collection(db, "requests"),
+      where("clientUid", "==", user.uid)
+    );
+    
+    const unsub = onSnapshot(q, (snap) => {
+      const data = snap.docs.map((d) => ({ id: d.id, ...d.data() } as CargoRequest));
+      // Сортируем на клиенте по createdAt (новые сверху)
+      data.sort((a, b) => {
+        const aTime = a.createdAt && typeof (a.createdAt as { toMillis?: () => number }).toMillis === "function"
+          ? (a.createdAt as { toMillis: () => number }).toMillis()
+          : 0;
+        const bTime = b.createdAt && typeof (b.createdAt as { toMillis?: () => number }).toMillis === "function"
+          ? (b.createdAt as { toMillis: () => number }).toMillis()
+          : 0;
+        return bTime - aTime;
+      });
+      setRequests(data);
       setLoadingReqs(false);
-    }
+    }, (error) => {
+      console.error("Ошибка подписки на заявки:", error);
+      setLoadingReqs(false);
+    });
+    
+    return unsub;
   }, [user]);
 
   useEffect(() => {
-    if (activeTab === "history") loadRequests();
-  }, [activeTab, loadRequests]);
+    if (activeTab !== "history") return;
+    const unsub = subscribeRequests();
+    return () => { if (typeof unsub === "function") unsub(); };
+  }, [activeTab, subscribeRequests]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

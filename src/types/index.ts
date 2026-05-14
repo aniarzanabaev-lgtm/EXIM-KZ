@@ -1,6 +1,6 @@
 // src/types/index.ts
 
-export type UserRole = "client" | "logist";
+export type UserRole = "client" | "logist" | "admin";
 
 export interface UserProfile {
   uid: string;

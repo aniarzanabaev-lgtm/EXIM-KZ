@@ -1,9 +1,9 @@
 "use client";
 // src/components/LogistDashboard.tsx
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
-  collection, getDocs, query, where,
-  orderBy, doc, updateDoc, serverTimestamp,
+  collection, query, where,
+  doc, updateDoc, serverTimestamp, onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/lib/auth-context";
@@ -26,51 +26,84 @@ export default function LogistDashboard() {
   const [requests, setRequests] = useState<CargoRequest[]>([]);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<CargoRequest | null>(null);
+  const [searchId, setSearchId] = useState("");
 
-  const load = useCallback(async (tab: string) => {
+  // Реактивная подписка на заявки — обновляется автоматически при изменениях
+  useEffect(() => {
+    // Очищаем список при смене вкладки, чтобы не показывать старые данные
+    setRequests([]);
     setLoading(true);
-    try {
-      let q;
-      if (tab === "pending") {
-        q = query(collection(db, "requests"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
-      } else {
-        q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
-      }
-      const snap = await getDocs(q);
-      setRequests(snap.docs.map(d => ({ id: d.id, ...d.data() } as CargoRequest)));
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
-  }, []);
-
-  useEffect(() => { load(activeTab); }, [activeTab, load]);
+    
+    // Запрос БЕЗ orderBy — не требует композитного индекса
+    // Для pending фильтруем по статусу, для all — загружаем все
+    const q = activeTab === "pending"
+      ? query(collection(db, "requests"), where("status", "==", "pending"))
+      : query(collection(db, "requests"));
+    
+    const unsub = onSnapshot(q, (snap) => {
+      const data = snap.docs.map(d => ({ id: d.id, ...d.data() } as CargoRequest));
+      // Сортируем на клиенте по createdAt (новые сверху)
+      data.sort((a, b) => {
+        const aTime = a.createdAt && typeof (a.createdAt as { toMillis?: () => number }).toMillis === "function"
+          ? (a.createdAt as { toMillis: () => number }).toMillis()
+          : 0;
+        const bTime = b.createdAt && typeof (b.createdAt as { toMillis?: () => number }).toMillis === "function"
+          ? (b.createdAt as { toMillis: () => number }).toMillis()
+          : 0;
+        return bTime - aTime;
+      });
+      setRequests(data);
+      setLoading(false);
+    }, (error) => {
+      console.error("Ошибка подписки на заявки:", error);
+      setLoading(false);
+    });
+    
+    return () => unsub();
+  }, [activeTab]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
 
   const handleApprove = async (requestId: string, planeData: object, logistComment?: string) => {
-    await updateDoc(doc(db, "requests", requestId), {
-      status: "approved",
-      assignedPlane: planeData,
-      logistName: profile?.name,
-      logistComment: logistComment || `Одобрено логистом ${profile?.name}`,
-      updatedAt: serverTimestamp(),
-    });
-    showToast("✅ Заявка одобрена и самолёт назначен!", "success");
-    setSelected(null);
-    load(activeTab);
+    try {
+      await updateDoc(doc(db, "requests", requestId), {
+        status: "approved",
+        assignedPlane: planeData,
+        logistName: profile?.name,
+        logistComment: logistComment || `Одобрено логистом ${profile?.name}`,
+        updatedAt: serverTimestamp(),
+      });
+      showToast("✅ Заявка одобрена и самолёт назначен!", "success");
+    } catch (err) {
+      console.error("Ошибка при одобрении заявки:", err);
+      showToast("Ошибка при одобрении заявки", "error");
+    } finally {
+      // Всегда закрываем модалку — список обновится через onSnapshot
+      setSelected(null);
+    }
   };
 
   const handleReject = async (requestId: string, reason: string) => {
-    await updateDoc(doc(db, "requests", requestId), {
-      status: "rejected",
-      logistComment: reason || `Отклонено логистом ${profile?.name}`,
-      logistName: profile?.name,
-      updatedAt: serverTimestamp(),
-    });
-    showToast("Заявка отклонена", "error");
-    setSelected(null);
-    load(activeTab);
+    try {
+      await updateDoc(doc(db, "requests", requestId), {
+        status: "rejected",
+        // Важно: сбрасываем назначенный самолёт при отклонении,
+        // чтобы не оставался след от предыдущего выбора
+        assignedPlane: null,
+        logistComment: reason || `Отклонено логистом ${profile?.name}`,
+        logistName: profile?.name,
+        updatedAt: serverTimestamp(),
+      });
+      showToast("Заявка отклонена", "error");
+    } catch (err) {
+      console.error("Ошибка при отклонении заявки:", err);
+      showToast("Ошибка при отклонении заявки", "error");
+    } finally {
+      // Всегда закрываем модалку — список обновится через onSnapshot
+      setSelected(null);
+    }
   };
 
   return (
@@ -83,6 +116,24 @@ export default function LogistDashboard() {
           <p>{activeTab === "pending" ? "Выберите заявку для обработки" : "Полная история всех заявок системы"}</p>
         </div>
 
+        {/* Поиск по ID — только для вкладки "Все заявки" */}
+        {activeTab === "all" && (
+          <div className={styles.searchBox}>
+            <input
+              type="text"
+              placeholder="🔍 Поиск по ID заявки (например, REQ-M5X8K)"
+              value={searchId}
+              onChange={(e) => setSearchId(e.target.value)}
+              className={styles.searchInput}
+            />
+            {searchId && (
+              <button className={styles.clearBtn} onClick={() => setSearchId("")}>
+                ✕
+              </button>
+            )}
+          </div>
+        )}
+
         {loading ? (
           <div className="loading-spinner">Загрузка заявок...</div>
         ) : requests.length === 0 ? (
@@ -93,14 +144,26 @@ export default function LogistDashboard() {
           </div>
         ) : (
           <div className={styles.list}>
-            {requests.map(r => (
-              <RequestCard
-                key={r.id}
-                request={r}
-                viewer="logist"
-                onClick={r.status === "pending" ? () => setSelected(r) : () => setSelected(r)}
-              />
-            ))}
+            {requests
+              .filter(r => {
+                // Фильтрация по поиску ID (только для вкладки "all")
+                if (activeTab === "all" && searchId.trim()) {
+                  const search = searchId.trim().toLowerCase();
+                  return (
+                    r.requestId?.toLowerCase().includes(search) ||
+                    r.id?.toLowerCase().includes(search)
+                  );
+                }
+                return true;
+              })
+              .map(r => (
+                <RequestCard
+                  key={r.id}
+                  request={r}
+                  viewer="logist"
+                  onClick={() => setSelected(r)}
+                />
+              ))}
           </div>
         )}
       </main>

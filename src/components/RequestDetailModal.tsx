@@ -25,7 +25,7 @@ export default function RequestDetailModal({ request: r, onClose, onApprove, onR
   const [loadingPlanes, setLoadingPlanes] = useState(true);
   const [selectedPlane, setSelectedPlane] = useState<Plane | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
-  const [aiResult, setAiResult] = useState<{ analysis: string; reason?: string; recommendedPlane?: Plane } | null>(null);
+  const [aiResult, setAiResult] = useState<{ analysis: string; bestFitPlane?: Plane; bestFitReason?: string; cheapestPlane?: Plane; cheapestReason?: string; noSuitableFlights?: boolean } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [showRejectInput, setShowRejectInput] = useState(false);
@@ -87,12 +87,14 @@ export default function RequestDetailModal({ request: r, onClose, onApprove, onR
     if (!selectedPlane) return;
     setSubmitting(true);
     try {
+      // Пересчитываем итоговую стоимость для конкретного веса груза
+      const calculatedCost = Math.round(r.weightKg * selectedPlane.pricePerKg);
       await onApprove(r.id!, {
         id: selectedPlane.id,
         model: selectedPlane.model,
         airline: selectedPlane.airline,
         flightNumber: selectedPlane.flightNumber,
-        totalCostUSD: selectedPlane.totalCostUSD,
+        totalCostUSD: calculatedCost,
         departureTime: selectedPlane.departureTime,
         flightDurationHours: selectedPlane.flightDurationHours,
         pricePerKg: selectedPlane.pricePerKg,
@@ -103,7 +105,13 @@ export default function RequestDetailModal({ request: r, onClose, onApprove, onR
   };
 
   const handleReject = async () => {
-    if (!showRejectInput) { setShowRejectInput(true); return; }
+    if (!showRejectInput) { 
+      setShowRejectInput(true); 
+      // Сбрасываем выбранный самолёт при начале отклонения,
+      // чтобы избежать случайного одобрения
+      setSelectedPlane(null);
+      return; 
+    }
     setSubmitting(true);
     try { await onReject(r.id!, rejectReason); }
     finally { setSubmitting(false); }
@@ -204,24 +212,63 @@ export default function RequestDetailModal({ request: r, onClose, onApprove, onR
                 <div className="ai-result" style={{ marginTop: 12 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                     <span style={{ fontSize: 20 }}>🤖</span>
-                    <strong style={{ fontSize: 16 }}>Анализ ИИ</strong>
+                    <strong style={{ fontSize: 16 }}>Рекомендации ИИ</strong>
                     <span className="ai-badge">GPT-4o-mini</span>
                   </div>
-                  <p className="ai-result">{aiResult.analysis}</p>
-                  {aiResult.reason && (
-                    <p style={{ marginTop: 8, fontSize: 13, color: "var(--blue2)" }}>
-                      💡 {aiResult.reason}
-                    </p>
-                  )}
-                  {aiResult.recommendedPlane && (
-                    <div className={styles.aiRecommended}>
-                      <span className="recommended-badge">⭐ ИИ выбрал</span>
-                      <strong style={{ marginLeft: 8 }}>{aiResult.recommendedPlane.model}</strong>
-                      <span style={{ color: "var(--text2)", marginLeft: 8 }}>
-                        ({aiResult.recommendedPlane.airline}) — ${aiResult.recommendedPlane.totalCostUSD?.toLocaleString()}
-                      </span>
+                  <p style={{ fontSize: 13, color: aiResult.noSuitableFlights ? "var(--red)" : "var(--text2)", marginBottom: 16, fontWeight: aiResult.noSuitableFlights ? 500 : 400 }}>
+                    {aiResult.noSuitableFlights && "⚠️ "}{aiResult.analysis}
+                  </p>
+                  
+                  {aiResult.noSuitableFlights && (
+                    <div style={{ padding: 16, background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, marginBottom: 16 }}>
+                      <div style={{ fontSize: 13, color: "var(--red)", fontWeight: 500 }}>Нет подходящих рейсов</div>
+                      <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>Попробуйте изменить дату отправки или дождитесь появления новых рейсов в системе.</div>
                     </div>
                   )}
+                  
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    {/* Самый подходящий */}
+                    {aiResult.bestFitPlane && (
+                      <div 
+                        className={styles.aiOptionCard}
+                        onClick={() => setSelectedPlane(aiResult.bestFitPlane!)}
+                        style={{ cursor: "pointer", border: selectedPlane?.id === aiResult.bestFitPlane.id ? "2px solid var(--accent)" : "1px solid var(--border)" }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                          <span style={{ fontSize: 18 }}>⭐</span>
+                          <strong style={{ color: "var(--accent)", fontSize: 13, textTransform: "uppercase" }}>По требованиям</strong>
+                        </div>
+                        <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{aiResult.bestFitPlane.model}</div>
+                        <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 8 }}>{aiResult.bestFitPlane.airline} · {aiResult.bestFitPlane.flightNumber}</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>${(r.weightKg * aiResult.bestFitPlane.pricePerKg).toLocaleString()}</div>
+                        <div style={{ fontSize: 11, color: "var(--text3)" }}>⏱ {aiResult.bestFitPlane.flightDurationHours} ч · ${aiResult.bestFitPlane.pricePerKg}/кг</div>
+                        {aiResult.bestFitReason && (
+                          <div style={{ marginTop: 8, fontSize: 11, color: "var(--blue2)", lineHeight: 1.4 }}>💡 {aiResult.bestFitReason}</div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Самый дешёвый */}
+                    {aiResult.cheapestPlane && (
+                      <div 
+                        className={styles.aiOptionCard}
+                        onClick={() => setSelectedPlane(aiResult.cheapestPlane!)}
+                        style={{ cursor: "pointer", border: selectedPlane?.id === aiResult.cheapestPlane.id ? "2px solid var(--green)" : "1px solid var(--border)" }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                          <span style={{ fontSize: 18 }}>💰</span>
+                          <strong style={{ color: "var(--green)", fontSize: 13, textTransform: "uppercase" }}>Самый дешёвый</strong>
+                        </div>
+                        <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{aiResult.cheapestPlane.model}</div>
+                        <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 8 }}>{aiResult.cheapestPlane.airline} · {aiResult.cheapestPlane.flightNumber}</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: "var(--green)", marginBottom: 6 }}>${(r.weightKg * aiResult.cheapestPlane.pricePerKg).toLocaleString()}</div>
+                        <div style={{ fontSize: 11, color: "var(--text3)" }}>⏱ {aiResult.cheapestPlane.flightDurationHours} ч · ${aiResult.cheapestPlane.pricePerKg}/кг</div>
+                        {aiResult.cheapestReason && (
+                          <div style={{ marginTop: 8, fontSize: 11, color: "var(--green)", lineHeight: 1.4 }}>💡 {aiResult.cheapestReason}</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -247,7 +294,8 @@ export default function RequestDetailModal({ request: r, onClose, onApprove, onR
                 <div className={styles.planesList}>
                   {planes.map(plane => {
                     const isSelected = selectedPlane?.id === plane.id;
-                    const isAIRec = aiResult?.recommendedPlane?.id === plane.id;
+                    const isBestFit = aiResult?.bestFitPlane?.id === plane.id;
+                    const isCheapest = aiResult?.cheapestPlane?.id === plane.id;
                     const dep = plane.departureTime
                       ? new Date(plane.departureTime).toLocaleString("ru-RU", {
                           day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
@@ -256,18 +304,19 @@ export default function RequestDetailModal({ request: r, onClose, onApprove, onR
                     return (
                       <div
                         key={plane.id}
-                        className={`${styles.planeCard} ${isSelected ? styles.planeSelected : ""} ${isAIRec ? styles.planeAI : ""}`}
+                        className={`${styles.planeCard} ${isSelected ? styles.planeSelected : ""} ${isBestFit ? styles.planeAI : ""} ${isCheapest ? styles.planeCheap : ""}`}
                         onClick={() => setSelectedPlane(plane)}
                       >
                         <div className={styles.planeHeader}>
                           <div>
                             <div className={styles.planeName}>
                               {plane.model}
-                              {isAIRec && <span className="recommended-badge" style={{ marginLeft: 8 }}>⭐ ИИ выбор</span>}
+                              {isBestFit && <span className="recommended-badge" style={{ marginLeft: 8 }}>⭐ Подходящий</span>}
+                              {isCheapest && !isBestFit && <span style={{ marginLeft: 8, background: "var(--green)", color: "#fff", fontSize: 10, fontWeight: 600, padding: "2px 6px", borderRadius: 4 }}>💰 Дешёвый</span>}
                             </div>
                             <div className={styles.planeAirline}>{plane.airline} · {plane.flightNumber}</div>
                           </div>
-                          <div className={styles.planePrice}>${plane.totalCostUSD?.toLocaleString()}</div>
+                          <div className={styles.planePrice}>${(r.weightKg * plane.pricePerKg).toLocaleString()}</div>
                         </div>
                         <div className={styles.planeMeta}>
                           <span>⚖️ {plane.availableCapacityKg?.toLocaleString()} кг</span>

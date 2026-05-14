@@ -24,7 +24,7 @@ export default function Sidebar({ activeTab, tabs, onTabChange }: SidebarProps) 
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
-        AIR<span>CARGO</span>KZ
+        EXIM <span>KZ</span>
       </div>
 
       <nav className={styles.nav}>
@@ -42,8 +42,8 @@ export default function Sidebar({ activeTab, tabs, onTabChange }: SidebarProps) 
 
       <div className={styles.userCard}>
         <div className={styles.userName}>{profile?.name}</div>
-        <div className={`${styles.userRole} ${profile?.role === "client" ? styles.client : styles.logist}`}>
-          {profile?.role === "client" ? "Клиент" : "Логист"}
+        <div className={`${styles.userRole} ${profile?.role === "client" ? styles.client : profile?.role === "logist" ? styles.logist : styles.admin}`}>
+          {profile?.role === "client" ? "Клиент" : profile?.role === "logist" ? "Логист" : "Админ"}
         </div>
         <div className={styles.userEmail}>{profile?.email}</div>
       </div>
